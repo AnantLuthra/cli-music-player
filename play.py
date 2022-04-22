@@ -9,8 +9,7 @@ import os
 import argparse, sys
 from playsound import playsound
 
-with open("help.txt", 'r') as f:
-    HELP = f.read()
+
 
 def handle_arg(args):
     """This function will handle case according to the argument passed by user"""
@@ -24,6 +23,11 @@ def stop_music():
 
 def get_arg():
     """This function gets the argument from cli"""
+
+    os.chdir(r"E:\Python\Python projects\CLI Music player")
+    with open("help.txt", 'r') as f:
+        HELP = f.read()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-h", type=bool, default=True, )
     parser.add_argument("-d", type=bool, default=True, help=HELP)
