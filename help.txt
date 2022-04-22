@@ -1,0 +1,6 @@
+-help :For help
+-h    :For help
+-d    :To play music from default directory
+-s    :For playing specific song
+-t    :For playing music in terminal
+-g    :For playing music through windows music player
