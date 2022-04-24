@@ -37,7 +37,7 @@ class player:
             for i in os.listdir(os.getcwd()):
                 if i.endswith(".mp3"): break           
             else:
-                self.console.print("No available music files in the repository !!", style="bol red")
+                self.console.print("No available music files in the repository !!", style="bold red")
                 return
             
         
