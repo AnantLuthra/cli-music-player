@@ -8,30 +8,48 @@ import multiprocessing
 import argparse
 import random
 import os
+from unittest.util import _MAX_LENGTH
 from rich import print
 from rich.console import Console
-import playsound
+from playsound import playsound
+from rich.table import Table
 
 class player:
     
     def __init__(self) -> None:
         self.console = Console()
         self.default_dir = r"C:\Users\anant luthra\Desktop\Important\Relax songs"
+        self.table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
         
-    def play_terminal(self, path):
-        # For playing song in terminal.
-        print("done in play_terminal")
-        songs = [i for i in os.listdir(path) if i.endswith(".mp3")]
-        a = f"({os.path.join(path,random.choice(songs))})"
-        # print(a)
 
-        print(os.path.isfile(a))
-        p = multiprocessing.Process(target=playsound.playsound, args=(a),)
+    def present_table(self, songs) -> None:
+        """This function will print beautiful table of songs"""
+        
+        self.table.add_column("S.No.", style="cyan", justify="center", width=5, footer_style="-")
+        self.table.add_column("Song names", style="green")
+            
+        for i in range(len(songs)):
+            self.table.add_row(str(i+1), songs[i])
+        print(self.table)
+
+
+    def play_terminal(self, path):
+        """For playing song in terminal from the given path."""
+
+        print(path)
+        a = [i for i in os.listdir(path) if i.endswith(".mp3")]
+        self.console.print(a)
+        songs = [i for i in os.listdir(path) if i.endswith(".mp3")]
+        # a = f"({os.path.join(path,random.choice(songs))})"
+        # print(a)
+        self.present_table(a)
+        os.chdir(path)
+
+        p = multiprocessing.Process(target=playsound, args=(random.choice(a),))
         p.start()
-        # playsound.playsound(r"Downloads\Adam Oh - Trapped In My Mind (Lyrics _ Lyric Video).mp3")
-        input("")
+        self.console.input("press ENTER to stop playback")
         p.terminate()
-        return
+        
 
     def play_gui(self, ):
         ...
@@ -57,18 +75,18 @@ class player:
                 self.console.print("Error: Argument missing '--g' or '--t'")
                 return
 
-            if songs == []:
+            elif songs == []:
                 style = "bold red on black"
                 self.console.print("\n--------------------Error---------------------",style = style, justify="center")
                 self.console.print("\nNo available music files in the repository !!", style=style, justify="center")
                 return
             
-            if args.g and args.t:
+            elif args.g and args.t:
                 # If both GUI one and Terminal argument is passed.
                 self.console.print("\n Both options can't be used select one 't' or 'g'", style=style)
                 return
 
-            if args.g:
+            elif args.g:
                 # Playing with GUI
                 os.startfile(random.choice(songs))
                 return
@@ -82,7 +100,8 @@ class player:
             if args.t:
                 self.play_terminal(self.default_dir)
             else:
-                os.startfile([i for i in os.listdir(self.default_dir) if i.endswith(".mp3")][0])
+                
+                os.startfile(os.path.join(self.default_dir, random.choice([i for i in os.listdir(self.default_dir) if i.endswith(".mp3")])))
                 
             
         elif not args.c and not args.d and not args.s:
@@ -118,14 +137,3 @@ if __name__ == "__main__":
         cli_player.get_arg()
     except Exception as e:
         print(e)
-
-    # a = "Main Rang Sharbaton Ka [Slowed+Reverb] - Arijit Singh _ Music lovers _ Textaudio.mp3"
-    # b = [i for i in os.listdir(os.getcwd()) if i.endswith(".mp3")]
-    # # print(a, "\n", b[0])
-    # # playsound.playsound(a)
-
-    # p = multiprocessing.Process(target=playsound.playsound, args=(b[0],))
-    # p.start()
-    # # playsound.playsound(r"Downloads\Adam Oh - Trapped In My Mind (Lyrics _ Lyric Video).mp3")
-    # input("")
-    # p.terminate()
