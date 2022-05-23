@@ -13,8 +13,10 @@ from rich import print
 from rich.console import Console
 from playsound import playsound
 from rich.table import Table
+from web_dat import WebDat
 
-class player:
+
+class Player:
     """
     This is a CLI tool for playing song from your system.
 
@@ -34,6 +36,7 @@ class player:
 
     def __init__(self) -> None:
         self.console = Console()
+        self.webdat = WebDat()
         self.__default_dir = [r"C:\Users\anant luthra\Desktop\Important\Relax songs", r"D:\d data\New songs", r"D:\d data\NCS music"]
         self.__table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
         
@@ -153,9 +156,17 @@ class player:
                 if args.r: self.__play_terminal(self.__default_dir[args.dv], True)
                 else: self.__play_terminal(self.__default_dir[args.dv], False)
             else:
+
+                # Playing through GUI
                 self.__animation()
                 if args.r: os.startfile(os.path.join(self.__default_dir[args.dv], random.choice([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
                 else: os.startfile(os.path.join(self.__default_dir[args.dv], self.__present_table([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
+
+        elif not args.d and not args.c and args.s:
+            ## Searching song online and downloading it and playing it.
+            self.__animation()
+            if args.t: self.webdat.search_n_play_song('t', args.s)                              # Playing through terminal
+            else: self.webdat.search_n_play_song('g', args.s)                                   # Playing through windows GUI
 
 
     def get_arg(self):
@@ -176,7 +187,7 @@ class player:
 
 if __name__ == "__main__":
 
-    cli_player = player()
+    cli_player = Player()
     try:
         cli_player.get_arg()
     except Exception as e:
