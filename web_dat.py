@@ -48,6 +48,9 @@ class WebDat:
     def __download_mp_file(self, link:str) -> str:
         """This functin downloads the given videos's youtube link in .mp3 format"""
 
+        # Changing pwd as we want to download music files in another repo not in current one.
+        os.chdir(r"C:\Users\anant luthra\Desktop\Important\search songs")
+
         video_info = youtube_dl.YoutubeDL().extract_info(
             url = link, download = False
         )
@@ -59,13 +62,13 @@ class WebDat:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([video_info['webpage_url']])
 
-        return f"{video_info['title']}.mp3"
+        return f"{video_info['title']}.mp3".replace("|", "#")
 
 
     def __play_down_music(self, a:str, type:str, filename:str) -> None:
         """This function plays the song which is downloaded from youtube as per user's search"""
 
-        if type == 'g': os.startfile(f"{filename}")
+        if type == 'g': os.startfile(filename)
         else:
             self.__play_song(filename)
 
