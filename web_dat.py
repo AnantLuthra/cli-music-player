@@ -1,30 +1,15 @@
-import multiprocessing
 import urllib.request
 import re
 import youtube_dl
 import os
-from playsound import playsound
 from rich.console import Console
-from rich import print
+from pl_song import GenFunc
 
 class WebDat:
 
     def __init__(self) -> None:
         self.console = Console()
-
-
-    def __play_song(self, songname:str) -> None:
-        """This function will play music as per type, from default directory or current one"""
-
-        print(f"[bold green]Playing[/bold green] - ([bold blue]{songname}[/bold blue])..")
-        try:
-            p = multiprocessing.Process(target=playsound, args=(songname,))
-            p.start()
-            self.console.input("\n[bold red]ENTER[/bold red] to stop playback.")
-            p.terminate()
-        except Exception as e:
-            self.console.print(e)
-            self.console.print("Internal module [bold red]error[/bold red] :sweat:")
+        self.main_funcs = GenFunc()
 
 
     def __search_input_constructor(self, search:str) -> int:
@@ -54,6 +39,7 @@ class WebDat:
         video_info = youtube_dl.YoutubeDL().extract_info(
             url = link, download = False
         )
+        
         ydl_opts = {
                 'format': 'bestaudio/best',
                 'keepvideo': False,
@@ -70,7 +56,7 @@ class WebDat:
 
         if type == 'g': os.startfile(filename)
         else:
-            self.__play_song(filename)
+            self.main_funcs.play_song(filename)
 
 
     def search_n_play_song(self, type:str, search:str):
@@ -78,7 +64,7 @@ class WebDat:
         as per the type argument."""
 
         a = self.__search_input_constructor(search)         # Preparing input for search.
-
+        self.main_funcs.animation()
         song = self.__download_mp_file(self.__search_yt(a)) # Downloading song.
 
         # Playing that song.
