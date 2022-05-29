@@ -4,16 +4,14 @@ Date - 19/4/22
 Purpose - To make a CLI music player.
 """
 
-import multiprocessing
 import argparse
 import random
 import os
-from time import sleep
 from rich import print
 from rich.console import Console
-from playsound import playsound
 from rich.table import Table
 from web_dat import WebDat
+from pl_song import GenFunc
 
 
 class Player:
@@ -39,30 +37,8 @@ class Player:
         self.webdat = WebDat()
         self.__default_dir = [r"C:\Users\anant luthra\Desktop\Important\Relax songs", r"D:\d data\New songs", r"D:\d data\NCS music"]
         self.__table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
+        self.main_funcs = GenFunc()
         
-    def __animation(self):
-        """This plays a animation of working in progress."""
-        tasks = [i for i in range(1, 2)]
-
-        with self.console.status("[bold green]Playing...") as status:
-            while tasks:
-                tasks.pop(0)
-                sleep(1)
-
-    def __play_song(self, songname:str) -> None:
-        """This function will play music as per type, from default directory or current one"""
-
-        self.__animation()
-        print(f"[bold green]Playing[/bold green] - ([bold blue]{songname}[/bold blue])..")
-        try:
-            p = multiprocessing.Process(target=playsound, args=(songname,))
-            p.start()
-            self.console.input("\n[bold red]ENTER[/bold red] to stop playback.")
-            p.terminate()
-        except Exception as e:
-            self.console.print(e)
-            self.console.print("Internal module [bold red]error[/bold red] :sweat:")
-
 
     def __present_table(self, songs) -> str:
         """This function will print beautiful table of songs"""
@@ -75,7 +51,7 @@ class Player:
 
         print(self.__table)
         answer = self.console.input("Enter the [bold green]ID[/bold green] of song which do you want to play: ")
-        self.__animation()
+        self.main_funcs.animation()
         if answer == "":
             self.console.print("[bold red]ID[/bold red] can't be [bold red]empty[/bold red] :expressionless:")
             exit()
@@ -94,9 +70,9 @@ class Player:
 
         ## Playing song according to --r argument 'random or not' ##
         if option:
-            self.__play_song(random.choice(a))
+            self.main_funcs.play_song(random.choice(a))
         else:
-            self.__play_song(self.__present_table(a))
+            self.main_funcs.play_song(self.__present_table(a))
 
     def __read_help(self) -> str:
         path = os.getcwd()
@@ -110,6 +86,7 @@ class Player:
 
         if args.h:
             self.console.print(self.__read_help(), style="bold green")
+            return
         
         if args.dv > len(self.__default_dir) - 1 or args.dv < 0:
             print("[bold red]Wrong[/bold red] default path [bold red]value[/bold red] entered :x:")
@@ -133,14 +110,14 @@ class Player:
                 return
 
             elif args.g:
-                self.__animation()
+                self.main_funcs.animation()
                 # Playing with windows music player
                 if args.r: os.startfile(random.choice(songs))
                 else: os.startfile(self.__present_table(songs))
 
             elif args.t:
                 # Playing in terminal
-                self.__animation()
+                self.main_funcs.animation()
                 if args.r: self.__play_terminal(os.getcwd(), True)
                 else: self.__play_terminal(os.getcwd(), False)
 
@@ -152,19 +129,19 @@ class Player:
                 return
             
             if args.t:
-                self.__animation()
+                self.main_funcs.animation()
                 if args.r: self.__play_terminal(self.__default_dir[args.dv], True)
                 else: self.__play_terminal(self.__default_dir[args.dv], False)
             else:
 
                 # Playing through GUI
-                self.__animation()
+                self.main_funcs.animation()
                 if args.r: os.startfile(os.path.join(self.__default_dir[args.dv], random.choice([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
                 else: os.startfile(os.path.join(self.__default_dir[args.dv], self.__present_table([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
 
         elif not args.d and not args.c and args.s:
             ## Searching song online and downloading it and playing it.
-            self.__animation()
+            self.main_funcs.animation()
             if args.t: self.webdat.search_n_play_song('t', args.s)                              # Playing through terminal
             else: self.webdat.search_n_play_song('g', args.s)                                   # Playing through windows GUI
 
