@@ -8,11 +8,21 @@
 ## Requirements 
 - Python 3.10 or higher
 
+## Clone this repository
+
+```git clone https://github.com/AnantLuthra/cli-music-player.git```
+
 ### Module used (External)
-- Rich = 11.1.0
-- Playsound = 1.2.2
+- rich = 11.1.0
+- playsound = 1.2.2
 - youtube_dl = 2021.12.17
-- Requests = 2.27.1
+- requests = 2.27.1
+- os
+- random
+- argparse
+- time
+- multiprocessing
+- urllib.request
 
 ---
 
@@ -32,3 +42,4 @@
 
 ---
 
+![sample1](https://github.com/AnantLuthra/cli-music-player/assets/1.png)
