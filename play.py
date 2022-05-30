@@ -109,17 +109,20 @@ class Player:
                 self.console.print("\n:x: No available music files in the repository :x:", style=style, justify="center")
                 return
 
+            elif args.t:
+                # Playing in terminal
+                self.main_funcs.animation()
+                if args.r: self.__play_terminal(os.getcwd(), True)
+                else: self.__play_terminal(os.getcwd(), False)
+
+            
             elif args.g:
                 self.main_funcs.animation()
                 # Playing with windows music player
                 if args.r: os.startfile(random.choice(songs))
                 else: os.startfile(self.__present_table(songs))
 
-            elif args.t:
-                # Playing in terminal
-                self.main_funcs.animation()
-                if args.r: self.__play_terminal(os.getcwd(), True)
-                else: self.__play_terminal(os.getcwd(), False)
+            
 
         elif args.d:
             ## Playing song from default directory ##

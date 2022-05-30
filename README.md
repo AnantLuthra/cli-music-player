@@ -41,5 +41,30 @@
 | `--c`   | ->  For playing songs from the current directory     |
 
 ---
+### Usage
 
-![sample1](./reviews/1.png)
+- `--d --g` = Just for playing song from default directory with using windows media player
+- `--d --t` = For playing from default directory in terminal.
+- `--d --t --r` = For playing random song from default directory in terminal
+- `--c --g --r` = For playing random song from current directory using windows media player
+![sample_gif](./previews/1.gif)
+
+---
+#### Using --s argument
+
+- `play --s faded_alan_walker --g` = For downloading and playing song from youtube. Remember to search it by passing --s argument and value having `_` instead of space.
+- And use `--g` argument for playing song while using `--s` argument instead of `--t` as it often time gives this error - _A problem occurred in initializing MCI_
+
+![sample_gif2](./previews/2.gif)
+
+---
+
+#### Some other previews
+
+![sample1](./previews/1.png)
+
+---
+
+- Using `--c --t --r` arguments.
+
+![sample2](./previews/2.png)
