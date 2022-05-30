@@ -42,4 +42,4 @@
 
 ---
 
-![sample1](https://github.com/AnantLuthra/cli-music-player/assets/1.png)
+![sample1](./reviews/1.png)
