@@ -7,3 +7,5 @@
 --t    :For playing music in terminal
 --g    :For playing music through windows music player
 --c    :For playing songs from the current directory
+--l    :For searching songs in local system
+--w    :For search & play song from web
