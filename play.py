@@ -7,6 +7,7 @@ Purpose - To make a CLI music player.
 import argparse
 import random
 import os
+import difflib
 from rich import print
 from rich.console import Console
 from rich.table import Table
@@ -40,7 +41,7 @@ class Player:
         self.main_funcs = GenFunc()
         
 
-    def __present_table(self, songs) -> str:
+    def __present_table(self, songs:list) -> str:
         """This function will print beautiful table of songs"""
         
         self.__table.add_column("ID", style="cyan", justify="center", width=5, footer_style="-")
@@ -61,6 +62,34 @@ class Player:
             exit()
 
         return songs[int(answer) -1]
+
+    
+    def __search_local(self, word:str) -> dict:
+        """
+        This function searches the song passed as word argument across all the default
+        directories one by one.
+        """
+        
+        all_matches = {}
+        word = word.split()
+
+        # Todo: Solve bugs.
+        # Use another approach for searching song in directories.
+        for i in self.__default_dir:
+
+            for j in word:
+                matches = difflib.get_close_matches([j.lower()], 
+                        [j.lower() for j in os.listdir(i) if j.endswith(".mp3")], n=10, cutoff=0.20)
+                        
+                print(matches)
+                if matches != []:
+
+                    all_matches[i] = matches
+                    # Then you have to just play the song.
+
+        print(all_matches)
+        
+
 
     def __play_terminal(self, path:str, option:bool):
         """For playing song in terminal from the given path."""
@@ -143,10 +172,27 @@ class Player:
                 else: os.startfile(os.path.join(self.__default_dir[args.dv], self.__present_table([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
 
         elif not args.d and not args.c and args.s:
+
+            ## Checking if both arguments are passed.
+            if args.w and args.l:
+                self.console.print("[bold red]Error[/bold red]: Using both arguments at once! Use one arguement [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
+                return
+
             ## Searching song online and downloading it and playing it.
-            self.main_funcs.animation()
-            if args.t: self.webdat.search_n_play_song('t', args.s)                              # Playing through terminal
-            else: self.webdat.search_n_play_song('g', args.s)                                   # Playing through windows GUI
+            if args.w:          ## Searching on web with --w argument.
+                self.main_funcs.animation()
+                if args.t: self.webdat.search_n_play_song('t', args.s)                       # Playing through terminal
+                else: self.webdat.search_n_play_song('g', args.s)                            # Playing through windows GUI
+
+            elif args.l:
+                ## Search and play song
+                self.__search_local(args.s)
+
+            else:
+                self.console.print("[bold yellow]Warning[/bold yellow]: Atleast use one argument [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
+
+                self.console.print("Searching on local system...", style="italic green")
+                self.__search_local((args.s).replace("_", " "))
 
 
     def get_arg(self):
@@ -161,6 +207,8 @@ class Player:
         parser.add_argument("--r", action="store_true", help="Pass this argument for playing random song from chosen directory", default=False)
         parser.add_argument("--g", action="store_true", default=True, help="Set this true for playing song through windows gui")
         parser.add_argument("--c", action="store_true", default=False, help="For playing songs from the current directory.")
+        parser.add_argument("--w", action="store_true", default=False, help="For search & play song from web.")
+        parser.add_argument("--l", action="store_true", default=False, help="For searching songs in local system.")
         args = parser.parse_args()
         self.__handle_arg(args)
 
