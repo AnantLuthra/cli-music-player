@@ -17,6 +17,7 @@
 - playsound = 1.2.2
 - youtube_dl = 2021.12.17
 - requests = 2.27.1
+- thefuzz = 0.19.0
 - os
 - random
 - argparse
@@ -32,13 +33,15 @@
 | ------- |--------------------------------------------------    |
 | `--help`| ->  For help                                         | 
 | `--h`   | ->  For help                                         |  
-| `--d`   | ->  To play music from default directory             | 
+| `--d`   | ->  To play music from default directory             |
 | `--dv`  | ->  Value of default directory                       | 
 | `--s`   | ->  For playing specific song                        | 
 | `--r`   | ->  For playing random song from chosen directory    | 
 | `--t`   | ->  For playing music in terminal                    | 
 | `--g`   | ->  For playing music through windows music player   | 
 | `--c`   | ->  For playing songs from the current directory     |
+| `--l`   | ->  For searching songs in local system              |
+| `--w`   | ->  For search & play song from web                  |
 
 ---
 ### Usage
@@ -68,3 +71,8 @@
 - Using `--c --t --r` arguments.
 
 ![sample2](./previews/2.png)
+
+- Using `--s alan_walker --l --g` argument.
+  
+![sample3](./previews/search2.png)
+![sample3](./previews/search1.png)
