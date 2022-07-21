@@ -72,6 +72,8 @@
 
 ![sample2](./previews/2.png)
 
+---
+
 - Using `--s alan_walker --l --g` argument.
   
 ![sample3](./previews/search2.png)
