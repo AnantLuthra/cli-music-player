@@ -7,12 +7,12 @@ Purpose - To make a CLI music player.
 import argparse
 import random
 import os
-import difflib
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from web_dat import WebDat
 from pl_song import GenFunc
+from thefuzz import fuzz
 
 
 class Player:
@@ -34,12 +34,20 @@ class Player:
     """
 
     def __init__(self) -> None:
+
         self.console = Console()
         self.webdat = WebDat()
-        self.__default_dir = [r"C:\Users\anant luthra\Desktop\Important\Relax songs", r"D:\d data\New songs", r"D:\d data\NCS music"]
         self.__table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
         self.main_funcs = GenFunc()
-        
+
+        os.chdir(r"E:\Python\Python projects\CLI Music player")
+        with open("./assets/paths.txt", "r") as f:    
+            self.__default_dir = f.read().split("\n")
+
+            if self.__default_dir == "":
+                print("[bold red]Error[/bold red]: No default paths found in [bold green]paths.txt[/bold green] :((")
+                exit()
+                
 
     def __present_table(self, songs:list) -> str:
         """This function will print beautiful table of songs"""
@@ -68,28 +76,29 @@ class Player:
         """
         This function searches the song passed as word argument across all the default
         directories one by one.
+
+        1: Argument:
+        Word - The song word which you want to search.
+
+        2: Return Value:
+        Dict - It returns the list of all songs founded related to the word packed in a 
+        dictionary key is song name and value is the number of directory.
         """
         
         all_matches = {}
-        word = word.split()
 
-        # Todo: Solve bugs.
-        # Use another approach for searching song in directories.
-        for i in self.__default_dir:
+        for index, directory in enumerate(self.__default_dir):
+            
+            direc = [i for i in os.listdir(directory) if i.endswith(".mp3")]
 
-            for j in word:
-                matches = difflib.get_close_matches([j.lower()], 
-                        [j.lower() for j in os.listdir(i) if j.endswith(".mp3")], n=10, cutoff=0.20)
-                        
-                print(matches)
-                if matches != []:
+            for song in direc:
+                match1 = fuzz.token_set_ratio(word.lower(), song.lower())
+                match2 = fuzz.partial_ratio(word.lower(), song.lower())
 
-                    all_matches[i] = matches
-                    # Then you have to just play the song.
-
-        print(all_matches)
-        
-
+                if match1 > 70 or match2 > 70:
+                    all_matches[song] = index
+           
+        return all_matches
 
     def __play_terminal(self, path:str, option:bool):
         """For playing song in terminal from the given path."""
@@ -103,12 +112,14 @@ class Player:
         else:
             self.main_funcs.play_song(self.__present_table(a))
 
+
     def __read_help(self) -> str:
         path = os.getcwd()
         os.chdir(r"E:\Python\Python projects\CLI Music player")
-        with open("help.txt", 'r') as f:
+        with open("./assets/help.txt", 'r') as f:
             os.chdir(path)
             return f.read()
+
 
     def __handle_arg(self, args):
         """This function will handle case according to the argument passed by user"""
@@ -124,7 +135,7 @@ class Player:
         if not args.c and not args.d and not args.s:
             self.console.print(self.__read_help(), style="bold green")
 
-        elif args.c:
+        elif args.c and not args.d:
             ## Playing song from current directory ##
             songs = [i for i in os.listdir(os.getcwd()) if i.endswith(".mp3")]
             
@@ -185,14 +196,34 @@ class Player:
                 else: self.webdat.search_n_play_song('g', args.s)                            # Playing through windows GUI
 
             elif args.l:
-                ## Search and play song
-                self.__search_local(args.s)
+                ## Search and play song locally.
+                all_matches = self.__search_local(args.s)
+
+                # If it could find some results in local search.
+                if all_matches != {}:
+                    song = self.__present_table(list(all_matches.keys()))
+                    os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
+                else:
+                    self.console.print(" ---- No results Found :pensive: !! ---- ", style="Bold red")
 
             else:
                 self.console.print("[bold yellow]Warning[/bold yellow]: Atleast use one argument [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
-
+                
+                self.main_funcs.animation()
                 self.console.print("Searching on local system...", style="italic green")
-                self.__search_local((args.s).replace("_", " "))
+                all_matches = self.__search_local((args.s).replace("_", " "))
+
+                # If it could find some results in local search.
+                if all_matches != {}:
+                    song = self.__present_table(list(all_matches.keys()))
+                    os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
+
+                # Else searching online for download and playing of song.
+                else:
+                    self.main_funcs.animation()
+                    self.console.print("Couldn't find anything locally now searching online...", style="italic green")
+                    self.main_funcs.animation()
+                    self.webdat.search_n_play_song('g', args.s)
 
 
     def get_arg(self):
