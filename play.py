@@ -40,10 +40,11 @@ class Player:
         self.__table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
         self.main_funcs = GenFunc()
 
+        path = os.getcwd()
         os.chdir(r"E:\Python\Python projects\CLI Music player")
         with open("./assets/paths.txt", "r") as f:    
             self.__default_dir = f.read().split("\n")
-
+            os.chdir(path)
             if self.__default_dir == "":
                 print("[bold red]Error[/bold red]: No default paths found in [bold green]paths.txt[/bold green] :((")
                 exit()
@@ -130,12 +131,17 @@ class Player:
         
         if args.dv > len(self.__default_dir) - 1 or args.dv < 0:
             print("[bold red]Wrong[/bold red] default path [bold red]value[/bold red] entered :x:")
-            exit()
+            return
 
         if not args.c and not args.d and not args.s:
             self.console.print(self.__read_help(), style="bold green")
 
-        elif args.c and not args.d:
+        elif args.c:
+
+            if args.c and args.d:
+                self.console.print("[bold red]Error[/bold red]:You can't use [bold white]--c[/bold white] and [bold white]--c[/bold white] at once !!")
+                return
+
             ## Playing song from current directory ##
             songs = [i for i in os.listdir(os.getcwd()) if i.endswith(".mp3")]
             
@@ -162,11 +168,9 @@ class Player:
                 if args.r: os.startfile(random.choice(songs))
                 else: os.startfile(self.__present_table(songs))
 
-            
-
         elif args.d:
             ## Playing song from default directory ##
-
+            
             if not args.g and not args.t:
                 self.console.print("[bold red]Error[/bold red]: Argument [bold red]missing[/bold red] '--g' or '--t'")
                 return
