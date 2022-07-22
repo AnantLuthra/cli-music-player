@@ -1,9 +1,16 @@
 # CLI Music Player
 
+## Full Demonstration video of this project [🔗](https://www.youtube.com/watch?v=SfnvxynG68s)
+
 ## Features
 - It is used for quickly playing music through terminal command
-- I highly recommend you to set an alias of this in your windows 
+- You can play music from current directory.
+- You can play music from all folders which path is stored in [paths.txt](./assets/paths.txt)
+- Also you can play music by searching.
+- You can search song.
 - You can also download and play song which is not even before present in your computer.
+- I highly recommend you to set an alias of this in your windows 
+
 
 ## Requirements 
 - Python 3.10 or higher
@@ -12,7 +19,7 @@
 
 ```git clone https://github.com/AnantLuthra/cli-music-player.git```
 
-### Module used (External)
+### Module used
 - rich = 11.1.0
 - playsound = 1.2.2
 - youtube_dl = 2021.12.17
