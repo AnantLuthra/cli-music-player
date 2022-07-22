@@ -7,7 +7,7 @@
 - You can play music from current directory.
 - You can play music from all folders which path is stored in [paths.txt](./assets/paths.txt)
 - Also you can play music by searching.
-- You can search song.
+- You can search song across all the folders given in [paths.txt](./assets/paths.txt)
 - You can also download and play song which is not even before present in your computer.
 - I highly recommend you to set an alias of this in your windows 
 
