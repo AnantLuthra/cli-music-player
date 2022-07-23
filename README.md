@@ -45,7 +45,7 @@ git clone https://github.com/AnantLuthra/cli-music-player.git
 ```$ pip install assets\python_Levenshtein-0.12.2-cp310-cp310-win_amd64.whl```
 > This is for python 3.10 64 bit version. If you want to download wheel file for you own specifiec python version then download from this site - [link](https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-levenshtein)
 
-3. Make sure to change the path written on line number `44` and `119` in [play.py](play.py) to the path where you have cloned this repository.
+3. Make sure to change the path written on line number `44` and `120` in [play.py](play.py) to the path where you have cloned this repository.
 
 ## Commands
 
