@@ -35,10 +35,10 @@ class Player:
 
     def __init__(self) -> None:
 
-        self.console = Console()
-        self.webdat = WebDat()
+        self.__console = Console()
+        self.__webdat = WebDat()
         self.__table = Table(show_lines=True, show_header=True, title="LIST OF SONGS", style="bold")
-        self.main_funcs = GenFunc()
+        self.__main_funcs = GenFunc()
 
         path = os.getcwd()
         os.chdir(r"E:\Python\Python projects\CLI Music player")
@@ -60,14 +60,14 @@ class Player:
             self.__table.add_row(str(i+1), songs[i])
 
         print(self.__table)
-        answer = self.console.input("Enter the [bold green]ID[/bold green] of song which do you want to play: ")
-        self.main_funcs.animation()
+        answer = self.__console.input("Enter the [bold green]ID[/bold green] of song which do you want to play: ")
+        self.__main_funcs.animation()
         if answer == "":
-            self.console.print("[bold red]ID[/bold red] can't be [bold red]empty[/bold red] :expressionless:")
+            self.__console.print("[bold red]ID[/bold red] can't be [bold red]empty[/bold red] :expressionless:")
             exit()
 
         if int(answer) > len(songs) or int(answer) < 1:
-            self.console.print("[bold red]Invalid[/bold red] ID entered :expressionless:")
+            self.__console.print("[bold red]Invalid[/bold red] ID entered :expressionless:")
             exit()
 
         return songs[int(answer) -1]
@@ -101,6 +101,7 @@ class Player:
            
         return all_matches
 
+
     def __play_terminal(self, path:str, option:bool):
         """For playing song in terminal from the given path."""
 
@@ -109,9 +110,9 @@ class Player:
 
         ## Playing song according to --r argument 'random or not' ##
         if option:
-            self.main_funcs.play_song(random.choice(a))
+            self.__main_funcs.play_song(random.choice(a))
         else:
-            self.main_funcs.play_song(self.__present_table(a))
+            self.__main_funcs.play_song(self.__present_table(a))
 
 
     def __read_help(self) -> str:
@@ -126,7 +127,7 @@ class Player:
         """This function will handle case according to the argument passed by user"""
 
         if args.h:
-            self.console.print(self.__read_help(), style="bold green")
+            self.__console.print(self.__read_help(), style="bold green")
             return
         
         if args.dv > len(self.__default_dir) - 1 or args.dv < 0:
@@ -134,36 +135,36 @@ class Player:
             return
 
         if not args.c and not args.d and not args.s:
-            self.console.print(self.__read_help(), style="bold green")
+            self.__console.print(self.__read_help(), style="bold green")
 
         elif args.c:
 
             if args.c and args.d:
-                self.console.print("[bold red]Error[/bold red]:You can't use [bold white]--c[/bold white] and [bold white]--c[/bold white] at once !!")
+                self.__console.print("[bold red]Error[/bold red]:You can't use [bold white]--c[/bold white] and [bold white]--c[/bold white] at once !!")
                 return
 
             ## Playing song from current directory ##
             songs = [i for i in os.listdir(os.getcwd()) if i.endswith(".mp3")]
             
             if not args.g and not args.t:
-                self.console.print("Error: Argument missing '--g' or '--t'")
+                self.__console.print("Error: Argument missing '--g' or '--t'")
                 return
 
             elif songs == []:
                 style = "bold red on black"
-                self.console.print("\n--------------------Error---------------------",style = style, justify="center")
-                self.console.print("\n:x: No available music files in the repository :x:", style=style, justify="center")
+                self.__console.print("\n--------------------Error---------------------",style = style, justify="center")
+                self.__console.print("\n:x: No available music files in the repository :x:", style=style, justify="center")
                 return
 
             elif args.t:
                 # Playing in terminal
-                self.main_funcs.animation()
+                self.__main_funcs.animation()
                 if args.r: self.__play_terminal(os.getcwd(), True)
                 else: self.__play_terminal(os.getcwd(), False)
 
             
             elif args.g:
-                self.main_funcs.animation()
+                self.__main_funcs.animation()
                 # Playing with windows music player
                 if args.r: os.startfile(random.choice(songs))
                 else: os.startfile(self.__present_table(songs))
@@ -172,17 +173,17 @@ class Player:
             ## Playing song from default directory ##
             
             if not args.g and not args.t:
-                self.console.print("[bold red]Error[/bold red]: Argument [bold red]missing[/bold red] '--g' or '--t'")
+                self.__console.print("[bold red]Error[/bold red]: Argument [bold red]missing[/bold red] '--g' or '--t'")
                 return
             
             if args.t:
-                self.main_funcs.animation()
+                self.__main_funcs.animation()
                 if args.r: self.__play_terminal(self.__default_dir[args.dv], True)
                 else: self.__play_terminal(self.__default_dir[args.dv], False)
             else:
 
                 # Playing through GUI
-                self.main_funcs.animation()
+                self.__main_funcs.animation()
                 if args.r: os.startfile(os.path.join(self.__default_dir[args.dv], random.choice([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
                 else: os.startfile(os.path.join(self.__default_dir[args.dv], self.__present_table([i for i in os.listdir(self.__default_dir[args.dv]) if i.endswith(".mp3")])))
 
@@ -190,14 +191,14 @@ class Player:
 
             ## Checking if both arguments are passed.
             if args.w and args.l:
-                self.console.print("[bold red]Error[/bold red]: Using both arguments at once! Use one arguement [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
+                self.__console.print("[bold red]Error[/bold red]: Using both arguments at once! Use one arguement [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
                 return
 
             ## Searching song online and downloading it and playing it.
             if args.w:          ## Searching on web with --w argument.
-                self.main_funcs.animation()
-                if args.t: self.webdat.search_n_play_song('t', args.s)                       # Playing through terminal
-                else: self.webdat.search_n_play_song('g', args.s)                            # Playing through windows GUI
+                self.__main_funcs.animation()
+                if args.t: self.__webdat.search_n_play_song('t', args.s)                       # Playing through terminal
+                else: self.__webdat.search_n_play_song('g', args.s)                            # Playing through windows GUI
 
             elif args.l:
                 ## Search and play song locally.
@@ -208,13 +209,13 @@ class Player:
                     song = self.__present_table(list(all_matches.keys()))
                     os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
                 else:
-                    self.console.print(" ---- No results Found :pensive: !! ---- ", style="Bold red")
+                    self.__console.print(" ---- No results Found :pensive: !! ---- ", style="Bold red")
 
             else:
-                self.console.print("[bold yellow]Warning[/bold yellow]: Atleast use one argument [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
+                self.__console.print("[bold yellow]Warning[/bold yellow]: Atleast use one argument [bold white]'--w'[/bold white] or [bold white]'--l'[/bold white]")
                 
-                self.main_funcs.animation()
-                self.console.print("Searching on local system...", style="italic green")
+                self.__main_funcs.animation()
+                self.__console.print("Searching on local system...", style="italic green")
                 all_matches = self.__search_local((args.s).replace("_", " "))
 
                 # If it could find some results in local search.
@@ -224,10 +225,10 @@ class Player:
 
                 # Else searching online for download and playing of song.
                 else:
-                    self.main_funcs.animation()
-                    self.console.print("Couldn't find anything locally now searching online...", style="italic green")
-                    self.main_funcs.animation()
-                    self.webdat.search_n_play_song('g', args.s)
+                    self.__main_funcs.animation()
+                    self.__console.print("Couldn't find anything locally now searching online...", style="italic green")
+                    self.__main_funcs.animation()
+                    self.__webdat.search_n_play_song('g', args.s)
 
 
     def get_arg(self):
