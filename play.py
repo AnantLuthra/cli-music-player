@@ -61,6 +61,9 @@ class Player:
 
         print(self.__table)
         answer = self.__console.input("Enter the [bold green]ID[/bold green] of song which do you want to play: ")
+        if answer.isalpha():
+            self.__console.print("[bold red]Invalid input! -[/bold red] [italic]ID cannot be a string.[/italic]")
+            exit()
         self.__main_funcs.animation()
         if answer == "":
             self.__console.print("[bold red]ID[/bold red] can't be [bold red]empty[/bold red] :expressionless:")
@@ -220,8 +223,12 @@ class Player:
 
                 # If it could find some results in local search.
                 if all_matches != {}:
-                    song = self.__present_table(list(all_matches.keys()))
-                    os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
+                    if len(all_matches) == 1:
+                        song = [i for i in all_matches.keys()][0]
+                        os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
+                    else:
+                        song = self.__present_table(list(all_matches.keys()))
+                        os.startfile(os.path.join(self.__default_dir[all_matches[song]], song))
 
                 # Else searching online for download and playing of song.
                 else:
@@ -245,6 +252,7 @@ class Player:
         parser.add_argument("--c", action="store_true", default=False, help="For playing songs from the current directory.")
         parser.add_argument("--w", action="store_true", default=False, help="For search & play song from web.")
         parser.add_argument("--l", action="store_true", default=False, help="For searching songs in local system.")
+        parser.add_argument("--f", action="store_true", default=False, help="For playing first song coming in song search, while using --s argument.")
         args = parser.parse_args()
         self.__handle_arg(args)
 
@@ -256,3 +264,4 @@ if __name__ == "__main__":
         cli_player.get_arg()
     except Exception as e:
         print(e)
+        

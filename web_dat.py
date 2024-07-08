@@ -1,6 +1,6 @@
 import urllib.request
 import re
-import youtube_dl
+import yt_dlp as youtube_dl
 import os
 from rich.console import Console
 from pl_song import GenFunc
@@ -47,7 +47,7 @@ class WebDat:
         }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([video_info['webpage_url']])
-
+            
         return f"{video_info['title']}.mp3".replace("|", "#")
 
 
