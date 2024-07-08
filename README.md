@@ -25,6 +25,8 @@ git clone https://github.com/AnantLuthra/cli-music-player.git
 - rich = 11.1.0
 - playsound = 1.2.2
 - youtube_dl = 2021.12.17
+- yt-dlp = 2024.7.7
+> yt-dlp requirements: brotli, certifi, mutagen, pycryptodomex, requests, urllib3, websockets
 - requests = 2.27.1
 - thefuzz = 0.19.0
 - python_Levenshtein = 0.12.2 (wheel file)
